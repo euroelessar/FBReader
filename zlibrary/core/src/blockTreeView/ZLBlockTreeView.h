@@ -24,6 +24,10 @@
 
 #include <ZLBlockTreeNode.h>
 
+// This should be renamed to ZLTreeListener
+// Listener's methods should be called on changes of the tree,
+// i.e. adding of new children or receiving of the node's image.
+// Also we should remove ZLView from predecessors.
 class ZLBlockTreeView : public ZLView {
 
 public:
@@ -72,7 +76,19 @@ public:
 		ITEM,
 	};
 	void scroll(ScrollingMode mode, bool back);
+	
+	// TODO: new API
+	// ** begin
+	// Parent has new child at index :)
+	virtual void onChildAdded(ZLBlockTreeNode *parent, int index) {}
+	// This is also easy to understand
+	virtual void onChildRemoved(ZLBlockTreeNode *parent, int index) {}
+	// This method should be called at every node state change except of adding/removing of children
+	virtual void onChildUpdated(ZLBlockTreeNode *node) {}
+	// ** end
 
+	// TODO: remove old API
+	// ** begin
 protected:
 	void paint();
 
@@ -83,6 +99,7 @@ private:
 	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
 	void onScrollbarStep(Direction direction, int steps);
 	void onScrollbarPageStep(Direction direction, int steps);
+	// ** end
 
 private:
 	ZLBlockTreeNode *findNode(int &y);
